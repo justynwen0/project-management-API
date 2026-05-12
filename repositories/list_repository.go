@@ -1,0 +1,74 @@
+package repositories
+
+import (
+	"github.com/Filbertfelix888/project-management-API/config"
+	"github.com/Filbertfelix888/project-management-API/models"
+	"github.com/google/uuid"
+)
+
+type ListRepositories interface {
+	Create(list *models.List) error
+	Update(list *models.List) error
+	Delete(id uint) error
+	UpdatePosition(boardPublicID string, position []string) error
+	GetCardPosition(listPublicID string) ([]uuid.UUID, error)
+	FindByBoardID(boardID string) ([]models.List, error)
+	FindByPublicID(publicID string) (*models.List, error)
+	FindByID(id uint) (*models.List, error)
+}
+
+type listRepositories struct {
+}
+
+func NewListRepositories() ListRepositories {
+	return &listRepositories{}
+}
+
+func (r *listRepositories) Create(list *models.List) error {
+	return config.DB.Create(list).Error
+}
+
+func (r *listRepositories) Update(list *models.List) error {
+	return config.DB.Model(&models.List{}).Where("public_id = ? ", list.PublicID).
+		Updates(map[string]interface{}{
+			"title": list.Title,
+		}).Error
+
+}
+
+func (r *listRepositories) Delete(id uint) error {
+	return config.DB.Delete(&models.List{}, id).Error
+}
+
+func (r *listRepositories) UpdatePosition(boardPublicID string, position []string) error {
+	return config.DB.Model(&models.ListPosition{}).
+		Where("board_internal_id = (Select internal_id FROM boards Where public_id = ?)", boardPublicID).
+		Update("list_order", position).Error
+}
+
+func (r *listRepositories) GetCardPosition(listPublicID string) ([]uuid.UUID, error) {
+	var position models.CardPosition
+	err := config.DB.Joins("JOIN lists ON list.internal_id = card_positions.list_internal_id").
+		Where("list.public_id = ?", listPublicID).Error
+	return position.CardOrder, err
+}
+
+func (r *listRepositories) FindByBoardID(boardID string) ([]models.List, error) {
+	var list []models.List
+	err := config.DB.
+		Where("board_public_id = ?", boardID).Order("internal_id ASC").Find(&list).Error
+	return list, err
+}
+
+func (r *listRepositories) FindByPublicID(publicID string) (*models.List, error) {
+	var list models.List
+	err := config.DB.Where("public_id = ?", publicID).First(&list).Error
+
+	return &list, err
+}
+
+func (r *listRepositories) FindByID(id uint) (*models.List, error) {
+	var list models.List
+	err := config.DB.First(&list, id).Error
+	return &list, err
+}
