@@ -3,8 +3,8 @@ package repositories
 import (
 	"strings"
 
-	"github.com/Filbertfelix888/project-management-API/config"
-	"github.com/Filbertfelix888/project-management-API/models"
+	"github.com/justynwen0/project-management-API/config"
+	"github.com/justynwen0/project-management-API/models"
 )
 
 type UserRepository interface {

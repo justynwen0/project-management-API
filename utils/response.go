@@ -31,7 +31,7 @@ type PaginationMeta struct {
 	Limit     int    `json:"limit" example:"10"`
 	Total     int    `json:"total" example:"100"`
 	TotalPage int    `json:"total_pages" example:"10"`
-	Filter    string `json:"filter" example:"nama=Filbertfelix888"`
+	Filter    string `json:"filter" example:"nama=justynwen0"`
 	Sort      string `json:"sort" example:"-id"`
 }
 

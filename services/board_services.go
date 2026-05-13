@@ -3,25 +3,25 @@ package services
 import (
 	"errors"
 
-	"github.com/Filbertfelix888/project-management-API/models"
-	"github.com/Filbertfelix888/project-management-API/repositories"
 	"github.com/google/uuid"
+	"github.com/justynwen0/project-management-API/models"
+	"github.com/justynwen0/project-management-API/repositories"
 )
 
 type BoardService interface {
 	Create(board *models.Board) error
 	Update(board *models.Board) error
-	GetByPublicID(publicID string)(*models.Board, error)
+	GetByPublicID(publicID string) (*models.Board, error)
 	AddMembers(boardPublicID string, userPublicIDs []string) error
 	RemoveMembers(boardPublicID string, userPublicIDs []string) error
-	GetAllByUserPaginate(userPublicID, filter, sort string, limit, 
+	GetAllByUserPaginate(userPublicID, filter, sort string, limit,
 		offset int) ([]models.Board, int64, error)
 	GetMembersByBoardID(boardPublicID string) ([]models.User, error)
 }
 
 type boardService struct {
-	boardRepo repositories.BoardRepository
-	userRepo  repositories.UserRepository
+	boardRepo       repositories.BoardRepository
+	userRepo        repositories.UserRepository
 	boardMemberRepo repositories.BoardMemberRepository
 }
 
@@ -47,7 +47,7 @@ func (s *boardService) Update(board *models.Board) error {
 	return s.boardRepo.Update(board)
 }
 
-func (s *boardService) GetByPublicID(publicID string)(*models.Board, error) {
+func (s *boardService) GetByPublicID(publicID string) (*models.Board, error) {
 	return s.boardRepo.FindByPublicID(publicID)
 }
 
@@ -78,16 +78,16 @@ func (s *boardService) AddMembers(boardPublicID string, userPublicIDs []string) 
 		memberMap[uint(member.InternalID)] = true //membermap[1] = true
 	}
 
-	var newMembersIDs  []uint
-		for _, userID := range userInternalIDs {
-			if !memberMap[userID] {
-				newMembersIDs = append(newMembersIDs, userID)	
-			}
+	var newMembersIDs []uint
+	for _, userID := range userInternalIDs {
+		if !memberMap[userID] {
+			newMembersIDs = append(newMembersIDs, userID)
 		}
-		if len(newMembersIDs) == 0 {
-			return nil
-		}
-		return s.boardRepo.AddMember(uint(board.InternalID), newMembersIDs)
+	}
+	if len(newMembersIDs) == 0 {
+		return nil
+	}
+	return s.boardRepo.AddMember(uint(board.InternalID), newMembersIDs)
 }
 
 func (s *boardService) RemoveMembers(boardPublicID string, userPublicIDs []string) error {
@@ -121,19 +121,18 @@ func (s *boardService) RemoveMembers(boardPublicID string, userPublicIDs []strin
 	var membersToRemove []uint
 	for _, userID := range userInternalIDs {
 		if memberMap[userID] {
-			membersToRemove = append(membersToRemove, userID)	
+			membersToRemove = append(membersToRemove, userID)
 		}
 	}
 
 	return s.boardRepo.RemoveMember(uint(board.InternalID), membersToRemove)
 }
 
-func (s *boardService) GetAllByUserPaginate(userPublicID, filter, sort string, limit, 
+func (s *boardService) GetAllByUserPaginate(userPublicID, filter, sort string, limit,
 	offset int) ([]models.Board, int64, error) {
-		return s.boardRepo.FindAllByUserPaginate(userPublicID, filter, sort, limit, offset)
+	return s.boardRepo.FindAllByUserPaginate(userPublicID, filter, sort, limit, offset)
 }
 
 func (s *boardService) GetMembersByBoardID(boardPublicID string) ([]models.User, error) {
 	return s.boardMemberRepo.GetMembers(boardPublicID)
 }
-

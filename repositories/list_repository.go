@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"github.com/Filbertfelix888/project-management-API/config"
-	"github.com/Filbertfelix888/project-management-API/models"
 	"github.com/google/uuid"
+	"github.com/justynwen0/project-management-API/config"
+	"github.com/justynwen0/project-management-API/models"
 )
 
 type ListRepositories interface {

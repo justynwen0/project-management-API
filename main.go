@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	"github.com/Filbertfelix888/project-management-API/config"
-	"github.com/Filbertfelix888/project-management-API/controllers"
-	"github.com/Filbertfelix888/project-management-API/database/seed"
-	"github.com/Filbertfelix888/project-management-API/repositories"
-	"github.com/Filbertfelix888/project-management-API/routes"
-	"github.com/Filbertfelix888/project-management-API/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/justynwen0/project-management-API/config"
+	"github.com/justynwen0/project-management-API/controllers"
+	"github.com/justynwen0/project-management-API/database/seed"
+	"github.com/justynwen0/project-management-API/repositories"
+	"github.com/justynwen0/project-management-API/routes"
+	"github.com/justynwen0/project-management-API/services"
 )
 
 func main() {
@@ -21,11 +21,11 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-        AllowOrigins:     "http://localhost:5173",
-        AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
-        AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
-        AllowCredentials: true,
-    }))
+		AllowOrigins:     "http://localhost:5173",
+		AllowMethods:     "GET,POST,PUT,DELETE,OPTIONS",
+		AllowHeaders:     "Origin, Content-Type, Accept, Authorization",
+		AllowCredentials: true,
+	}))
 
 	// user
 	userRepo := repositories.NewUserRepository()

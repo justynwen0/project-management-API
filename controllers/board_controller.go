@@ -4,13 +4,13 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/Filbertfelix888/project-management-API/models"
-	"github.com/Filbertfelix888/project-management-API/services"
-	"github.com/Filbertfelix888/project-management-API/utils"
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
+	"github.com/justynwen0/project-management-API/models"
+	"github.com/justynwen0/project-management-API/services"
+	"github.com/justynwen0/project-management-API/utils"
 )
 
 type BoardController struct {

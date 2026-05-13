@@ -1,8 +1,8 @@
 package models
 
 import (
-	"github.com/Filbertfelix888/project-management-API/models/types"
 	"github.com/google/uuid"
+	"github.com/justynwen0/project-management-API/models/types"
 )
 
 type ListPosition struct {

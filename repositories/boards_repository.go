@@ -2,9 +2,9 @@ package repositories
 
 import (
 	"time"
-	
-	"github.com/Filbertfelix888/project-management-API/config"
-	"github.com/Filbertfelix888/project-management-API/models"
+
+	"github.com/justynwen0/project-management-API/config"
+	"github.com/justynwen0/project-management-API/models"
 )
 
 type BoardRepository interface {
@@ -13,9 +13,8 @@ type BoardRepository interface {
 	FindByPublicID(publicID string) (*models.Board, error)
 	AddMember(boardID uint, userIDs []uint) error
 	RemoveMember(boardID uint, userIDs []uint) error
-	FindAllByUserPaginate(userPublicID, filter, sort string, limit, 
+	FindAllByUserPaginate(userPublicID, filter, sort string, limit,
 		offset int) ([]models.Board, int64, error)
-	
 }
 
 type boardRepository struct {
@@ -68,21 +67,21 @@ func (r *boardRepository) RemoveMember(boardID uint, userIDs []uint) error {
 		Delete(&models.BoardMember{}).Error
 }
 
-func (r *boardRepository) FindAllByUserPaginate(userPublicID, filter, sort string, limit, 
+func (r *boardRepository) FindAllByUserPaginate(userPublicID, filter, sort string, limit,
 	offset int) ([]models.Board, int64, error) {
-		var board []models.Board
-		var total int64
+	var board []models.Board
+	var total int64
 
 	query := config.DB.Model(&models.Board{}).
-	Where("owner_public_id = ? OR internal_id IN ("+
-		"SELECT board_members.board_internal_id FROM board_members "+ 
-		"JOIN users ON users.internal_id = board_members.user_internal_id "+
-		"WHERE users.public_id = ?)", userPublicID, userPublicID)
+		Where("owner_public_id = ? OR internal_id IN ("+
+			"SELECT board_members.board_internal_id FROM board_members "+
+			"JOIN users ON users.internal_id = board_members.user_internal_id "+
+			"WHERE users.public_id = ?)", userPublicID, userPublicID)
 	if filter != "" {
 		query = query.Where("title ILIKE ?", "%"+filter+"%")
 	}
 
-	//count 
+	//count
 	if err := query.Count(&total).Error; err != nil {
 		return nil, 0, err
 	}

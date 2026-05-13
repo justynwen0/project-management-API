@@ -3,10 +3,10 @@ package seed
 import (
 	"log"
 
-	"github.com/Filbertfelix888/project-management-API/config"
-	"github.com/Filbertfelix888/project-management-API/models"
-	"github.com/Filbertfelix888/project-management-API/utils"
 	"github.com/google/uuid"
+	"github.com/justynwen0/project-management-API/config"
+	"github.com/justynwen0/project-management-API/models"
+	"github.com/justynwen0/project-management-API/utils"
 )
 
 func SeedAdmin() {

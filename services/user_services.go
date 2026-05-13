@@ -3,10 +3,10 @@ package services
 import (
 	"errors"
 
-	"github.com/Filbertfelix888/project-management-API/models"
-	"github.com/Filbertfelix888/project-management-API/repositories"
-	"github.com/Filbertfelix888/project-management-API/utils"
 	"github.com/google/uuid"
+	"github.com/justynwen0/project-management-API/models"
+	"github.com/justynwen0/project-management-API/repositories"
+	"github.com/justynwen0/project-management-API/utils"
 )
 
 type UserService interface {

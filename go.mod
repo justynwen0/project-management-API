@@ -1,4 +1,4 @@
-module github.com/Filbertfelix888/project-management-API
+module github.com/justynwen0/project-management-API
 
 go 1.26.1
 

@@ -5,7 +5,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
-	"github.com/Filbertfelix888/project-management-API/config"
+	"github.com/justynwen0/project-management-API/config"
 )
 
 //generatetoken jwt
