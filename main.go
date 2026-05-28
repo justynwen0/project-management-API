@@ -49,7 +49,11 @@ func main() {
 	cardService := services.NewCardService(cardRepo, listRepo, userRepo)
 	cardController := controllers.NewCardController(cardService)
 
-	routes.Setup(app, userController, boardController, listController, cardController)
+	// dashboard
+	dashboardService := services.NewDashboardService(cardRepo)
+	dashboardController := controllers.NewDashboardController(dashboardService)
+
+	routes.Setup(app, userController, boardController, listController, cardController, dashboardController)
 
 	port := config.AppConfig.AppPort
 	log.Println("Server is running on port :", port)

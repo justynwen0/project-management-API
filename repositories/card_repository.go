@@ -25,6 +25,12 @@ type CardRepository interface {
 	AddAssignees(cardID uint, userIDs []uint) error
 	RemoveAssignees(cardID uint, userIDs []uint) error
 	AddAssigneesByPublicID(publicID string, userUUIDs []string) error
+
+	// dashboard
+	CountAllCards() (int64, error)
+	CountOverdueCards(now string) (int64, error)
+	GetTaskCountByAssignee() ([]models.AssigneeTaskCount, error)
+	GetTaskPercentage() ([]models.TaskPercentage, error)
 }
 
 type cardRepository struct {
@@ -143,4 +149,60 @@ func (r *cardRepository) AddAssigneesByPublicID(cardPublicID string, userUUIDs [
 	// 3. Panggil fungsi insert internal yang sudah kamu buat sebelumnya
 	// Gunakan uint() untuk card.InternalID agar tidak error int64 vs uint
 	return r.AddAssignees(uint(card.InternalID), userInternalIDs)
+}
+
+func (r *cardRepository) CountAllCards() (int64, error) {
+	var total int64
+
+	err := config.DB.Model(&models.Card{}).
+		Count(&total).Error
+
+	return total, err
+}
+
+func (r *cardRepository) CountOverdueCards(now string) (int64, error) {
+	var total int64
+
+	err := config.DB.Model(&models.Card{}).
+		Where("due_date IS NOT NULL AND due_date < ?", now).
+		Count(&total).Error
+
+	return total, err
+}
+
+func (r *cardRepository) GetTaskCountByAssignee() ([]models.AssigneeTaskCount, error) {
+	var result []models.AssigneeTaskCount
+
+	err := config.DB.
+		Table("card_assignees").
+		Select(`
+			users.name as assignee,
+			COUNT(cards.internal_id) as "taskCount"
+		`).
+		Joins("LEFT JOIN users ON users.internal_id = card_assignees.user_internal_id").
+		Joins("LEFT JOIN cards ON cards.internal_id = card_assignees.card_internal_id").
+		Group("users.name").
+		Order(`COUNT(cards.internal_id) DESC`).
+		Scan(&result).Error
+
+	return result, err
+}
+
+func (r *cardRepository) GetTaskPercentage() ([]models.TaskPercentage, error) {
+	var result []models.TaskPercentage
+
+	err := config.DB.
+		Table("card_assignees").
+		Select(`
+			users.name as name,
+			COUNT(cards.internal_id) as "value",
+			COUNT(cards.internal_id) as "count"
+		`).
+		Joins("LEFT JOIN users ON users.internal_id = card_assignees.user_internal_id").
+		Joins("LEFT JOIN cards ON cards.internal_id = card_assignees.card_internal_id").
+		Group("users.name").
+		Order("value DESC").
+		Scan(&result).Error
+
+	return result, err
 }

@@ -15,7 +15,8 @@ func Setup(app *fiber.App,
 	uc *controllers.UserController,
 	bc *controllers.BoardController,
 	lc *controllers.ListController,
-	cc *controllers.CardController) {
+	cc *controllers.CardController,
+	dc *controllers.DashboardController) {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -65,4 +66,13 @@ func Setup(app *fiber.App,
 	cardGroup.Get("/:id", cc.GetCardDetail)
 	cardGroup.Post("/:id/assignees", cc.AddCardAssignees)
 	cardGroup.Delete("/:id/assignees", cc.RemoveCardAssignees)
+
+	//dashboard
+	dashboardGroup := api.Group("/dashboard")
+	dashboardGroup.Get("/workload", dc.GetWorkload)
+	dashboardGroup.Get("/task-percentage", dc.GetTaskPercentage)
+
+	app.Get("/test-workload", dc.GetWorkload)
+	app.Get("/test-task-percentage", dc.GetTaskPercentage)
+
 }
