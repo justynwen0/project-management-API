@@ -1,4 +1,4 @@
-CREATE TABLE card_position (
+CREATE TABLE card_positions (
     internal_id BIGSERIAL PRIMARY KEY,
     public_id UUID NOT NULL DEFAULT gen_random_uuid(),
     list_internal_id BIGINT NOT NULL REFERENCES lists(internal_id) ON DELETE CASCADE,

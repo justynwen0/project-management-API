@@ -71,6 +71,19 @@ func (c *BoardController) UpdateBoard(ctx *fiber.Ctx) error {
 	return utils.Success(ctx, "Board berhasil diperbarui", board)
 }
 
+func (c *BoardController) DeleteBoard(ctx *fiber.Ctx) error {
+
+	boardID := ctx.Params("id")
+
+	err := c.services.Delete(boardID)
+
+	if err != nil {
+		return utils.NotFound(ctx,"Board tidak ditemukan",err.Error())
+	}
+
+	return utils.Success(ctx,"Board berhasil dihapus",nil)
+}
+
 func (c *BoardController) AddBoardMember(ctx *fiber.Ctx) error {
 	publicID := ctx.Params("id")
 

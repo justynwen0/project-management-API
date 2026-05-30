@@ -11,6 +11,7 @@ import (
 type BoardService interface {
 	Create(board *models.Board) error
 	Update(board *models.Board) error
+	Delete(publicID string) error
 	GetByPublicID(publicID string) (*models.Board, error)
 	AddMembers(boardPublicID string, userPublicIDs []string) error
 	RemoveMembers(boardPublicID string, userPublicIDs []string) error
@@ -45,6 +46,17 @@ func (s *boardService) Create(board *models.Board) error {
 
 func (s *boardService) Update(board *models.Board) error {
 	return s.boardRepo.Update(board)
+}
+
+func (s *boardService) Delete(publicID string) error {
+
+	_, err := s.boardRepo.FindByPublicID(publicID)
+
+	if err != nil {
+		return errors.New("board not found")
+	}
+
+	return s.boardRepo.Delete(publicID)
 }
 
 func (s *boardService) GetByPublicID(publicID string) (*models.Board, error) {

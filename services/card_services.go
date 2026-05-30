@@ -214,12 +214,12 @@ func (s *cardService) GetByListID(listPublicID string) ([]models.Card, error) {
 	// ambil card positionnya
 	position, err := s.cardRepo.FindCardPositionByListID(list.InternalID)
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-    	return nil, fmt.Errorf("Gagal mengambil posisi card: %w", err)
+		return nil, fmt.Errorf("Gagal mengambil posisi card: %w", err)
 	}
 
 	if position == nil {
-    return []models.Card{}, nil
-}
+		return []models.Card{}, nil
+	}
 	// ambil semua card di list tersebut
 	cards, err := s.cardRepo.FindByListID(listPublicID)
 	if err != nil {
@@ -227,7 +227,7 @@ func (s *cardService) GetByListID(listPublicID string) ([]models.Card, error) {
 	}
 	// sorting
 	if len(position.CardOrder) > 0 {
-	cards = sortCardByPosition(cards, position.CardOrder)
+		cards = sortCardByPosition(cards, position.CardOrder)
 	}
 
 	return cards, nil

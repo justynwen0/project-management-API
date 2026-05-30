@@ -10,7 +10,10 @@ import (
 type BoardRepository interface {
 	Create(board *models.Board) error
 	Update(board *models.Board) error
+	Delete(publicID string) error
+
 	FindByPublicID(publicID string) (*models.Board, error)
+
 	AddMember(boardID uint, userIDs []uint) error
 	RemoveMember(boardID uint, userIDs []uint) error
 	FindAllByUserPaginate(userPublicID, filter, sort string, limit,
@@ -35,6 +38,12 @@ func (r *boardRepository) Update(board *models.Board) error {
 		"description": board.Description,
 		"due_date":    board.DueDate,
 	}).Error
+}
+
+func (r *boardRepository) Delete(publicID string) error {
+	return config.DB.
+		Where("public_id = ?", publicID).
+		Delete(&models.Board{}).Error
 }
 
 func (r *boardRepository) FindByPublicID(publicID string) (*models.Board, error) {
