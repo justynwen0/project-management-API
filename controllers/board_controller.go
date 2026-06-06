@@ -122,7 +122,7 @@ func (c *BoardController) GetMyBoardPaginate(ctx *fiber.Ctx) error {
 	offset := (page - 1) * limit
 
 	filter := ctx.Query("filter", "")
-	sort := ctx.Query("sort", "created_at desc")
+	sort := ctx.Query("sort", "due_date asc")
 
 	board, total, err := c.services.GetAllByUserPaginate(userID, filter, sort, limit, offset)
 	if err != nil {

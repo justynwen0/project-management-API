@@ -61,6 +61,7 @@ func getEnv(key string, fallback string) string {
 
 func ConnectDB() {
 	cfg := AppConfig
+	fmt.Println("DB NAME:", cfg.DBName)
 
 	dsn := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", cfg.DBHost,
 		cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName)
